@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome, <%= user.name %></h1>
-    <a href="/user/logout">Logout</a>
-  </div>
+    <div class="container">
+        <h1>Welcome to Your Dashboard</h1>
+        
+        <div class="details">
+            <div><span>Name:</span> <%= user.name %></div>
+            <div><span>Father's Name:</span> <%= user.fathersName %></div>
+            <div><span>Date of Birth:</span> <%= user.dob %></div>
+            <div><span>Phone Number:</span> <%= user.phoneNumber %></div>
+            <div><span>Address:</span> <%= user.address %></div>
+            <div><span>College Name:</span> <%= user.collegeName %></div>
+            <div><span>Course:</span> <%= user.course %></div>
+            <div><span>College ID:</span> <%= user.collegeId %></div>
+            <div><span>Caste Certificate Number:</span> <%= user.casteCertificateNumber %></div>
+            <div><span>Aadhaar Number:</span> <span class="masked"><%= user.maskedAadhaar %></span></div>
+            <div><span>Income Certificate Number:</span> <%= user.incomeCertificateNumber %></div>
+        </div>
+
+        <button onclick="window.location.href='/edit'">Edit Details</button>
+        <a href="/logout" class="logout">Log Out</a>
+    </div>
 </body>
 </html>
