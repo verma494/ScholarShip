@@ -22,10 +22,11 @@
             <div><span>Caste Certificate Number:</span> <%= user.casteCertificateNumber %></div>
             <div><span>Aadhaar Number:</span> <span class="masked"><%= user.maskedAadhaar %></span></div>
             <div><span>Income Certificate Number:</span> <%= user.incomeCertificateNumber %></div>
+            <div><span>STATUS:</span> <%= user.status %></div>    
         </div>
 
         <button onclick="window.location.href='/edit'">Edit Details</button>
-        <a href="/logout" class="logout">Log Out</a>
+        <a href="/user/logout" class="logout">Log Out</a>
     </div>
 </body>
 </html>

@@ -3,6 +3,8 @@ const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+const mongoose = require('mongoose');
+const adminRoutes = require('./routes/adminRoutes');
 const cookieParser = require('cookie-parser');
 const User = require('./models/UserModel');
 const jwt = require('jsonwebtoken');
@@ -12,13 +14,13 @@ const app = express();
 // Passport Config
 require('./config/passport')(passport);
 
-// EJS
+
 app.set('view engine', 'ejs');
 
 // Static Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Bodyparser
+
 app.use(express.urlencoded({ extended: false }));
 
 // Express Session
@@ -36,24 +38,35 @@ app.use(passport.session());
 app.use(flash());
 
 // Cookie Parser Middleware
-app.use(cookieParser()); // This line must be present
+app.use(cookieParser()); 
 
-// Global Variables
+
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
   next();
 });
+const dbURI = 'mongodb://127.0.0.1:27017/UserData';
 
-// Home Route
+
+mongoose.connect(dbURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected successfully'))
+.catch(err => console.log('MongoDB connection error:', err));
+
+
+
 app.get('/', (req, res) => {
   res.render('index');
 });
 
-// Routes
-app.use('/user', require('./routes/user'));
 
-// Start Server
-const PORT = process.env.PORT || 5000;
+app.use('/user', require('./routes/user'));
+app.use('/admin', require('./routes/adminRoutes'));
+
+
+const PORT = 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

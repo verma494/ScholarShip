@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>College</th>
+                <th>Status</th>
+                <th>Update Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+            <tr>
+                <td><%= user.name %></td>
+                <td><%= user.collegeName %></td>
+                <td><%= user.status %></td>
+                <td>
+                    <form action="/admin/update-status/<%= user._id %>" method="POST">
+                        <select name="status">
+                            <option value="Pending" <%= user.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                            <option value="Approved" <%= user.status === 'Approved' ? 'selected' : '' %>>Approved</option>
+                            <option value="Rejected" <%= user.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -5,13 +5,12 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const User = require('../models/UserModel');
 
-// JWT Secret
-const JWT_SECRET = 'your_jwt_secret'; // Replace with a secure secret
 
-// Registration Page
+const JWT_SECRET = 'your_jwt_secret'; 
+
 router.get('/register', (req, res) => res.render('register'));
 
-// Register User
+
 router.post('/register', async (req, res) => {
     const { name, fatherName, dob, phoneNumber, address, collegeName, course, collegeId, casteCertificateNumber, aadhaarNumber, incomeCertificateNumber, email, password } = req.body;
   
@@ -19,23 +18,24 @@ router.post('/register', async (req, res) => {
       let user = await User.findOne({ email: email });
       if (user) {
         res.send('Email is already registered');
+        res.redirect('/user/register');
       } else {
         const newUser = new User({ name, fatherName, dob, phoneNumber, address, collegeName, course, collegeId, casteCertificateNumber, aadhaarNumber, incomeCertificateNumber, email, password });
   
-        // Hash Password
+        
         bcrypt.genSalt(10, async (err, salt) => {
           if (err) throw err;
           const hash = await bcrypt.hash(newUser.password, salt);
           newUser.password = hash;
           await newUser.save();
   
-          // Create JWT Token
+          
           const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: '1h' });
   
-          // Set JWT Token as Cookie
+          
           res.cookie('token', token, { httpOnly: true });
           
-          res.redirect('/user/dashboard'); // Redirect to dashboard
+          res.redirect('/user/dashboard'); 
         });
       }
     } catch (error) {
@@ -44,10 +44,10 @@ router.post('/register', async (req, res) => {
   });
   
 
-// Login Page
+
 router.get('/login', (req, res) => res.render('login'));
 
-// Login Handle
+
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) throw err;
@@ -57,28 +57,26 @@ router.post('/login', (req, res, next) => {
       req.logIn(user, async (err) => {
         if (err) throw err;
 
-        // Create JWT Token
         const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
-        // Set JWT Token as Cookie
         res.cookie('token', token, { httpOnly: true });
 
-        res.redirect('/user/dashboard'); // Redirect to dashboard
+        res.redirect('/user/dashboard'); 
       });
     }
   })(req, res, next);
 });
 
-// Logout Handle
+
 router.get('/logout', (req, res) => {
-  res.clearCookie('token'); // Clear the JWT token cookie
+  res.clearCookie('token'); 
   req.logout(() => {
     req.flash('success_msg', 'You are logged out');
-    res.redirect('/user/login');
+    res.redirect('/');
   });
 });
 
-// Dashboard Page (Protected)
+
 router.get('/dashboard', async (req, res) => {
     const token = req.cookies.token;
   
@@ -94,7 +92,7 @@ router.get('/dashboard', async (req, res) => {
         return res.redirect('/user/login');
       }
   
-      // Mask Aadhaar Number
+     
       const maskedAadhaarNumber = user.aadhaarNumber.replace(/(\d{4})\d{4}(\d{4})/, 'xxxx78xxx');
   
       res.render('dashboard', { user: { ...user._doc, aadhaarNumber: maskedAadhaarNumber } });
